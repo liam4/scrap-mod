@@ -74,6 +74,7 @@ public class ScratchRuntime {
 	public var edgeTriggersEnabled:Boolean = false; // initially false, becomes true when project first run
 	public var currentDoObj:ScratchObj = null;
 	public var canDropAnywhere:Boolean = false; // preferences - can drop a reporter into any menu/input?
+	public var shouldSortPalettes:Boolean = true; // preferences - should sort custom block, variable palettes alphabetically?
 
 	private var microphone:Microphone;
 	private var timerBase:uint;
@@ -1505,8 +1506,17 @@ public class ScratchRuntime {
 		return null;
 	}
 
+	// -----------------------------
+	// Preference menu options
+	//------------------------------
+
 	public function dropAnywhere() {
 		this.canDropAnywhere = !this.canDropAnywhere;
+	}
+
+	public function sortPalettes() {
+		this.shouldSortPalettes = !this.shouldSortPalettes;
+		app.updatePalette();
 	}
 
 	// -----------------------------

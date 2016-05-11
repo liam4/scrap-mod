@@ -1111,7 +1111,8 @@ public class Scratch extends Sprite {
 
 	public function showPrefMenu(b:*):void {
 		var m:Menu = new Menu(null, 'Preferences', CSS.topBarColor(), 28);
-		m.addItem('Drop Anywhere', runtime.dropAnywhere, true, runtime.canDropAnywhere);
+		m.addItem('Drop anywhere', runtime.dropAnywhere, true, runtime.canDropAnywhere);
+		m.addItem('Sort palettes', runtime.sortPalettes, true, runtime.shouldSortPalettes);
 		var p:Point = b.localToGlobal(new Point(0, 0));
 		m.showOnStage(stage, b.x, topBarPart.bottom() - 1);
 	}

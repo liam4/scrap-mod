@@ -30,15 +30,16 @@ package scratch {
 
 	import flash.display.*;
 	import flash.events.MouseEvent;
-import flash.geom.ColorTransform;
-import flash.utils.*;
+	import flash.geom.ColorTransform;
+	import flash.utils.*;
 
 	import interpreter.*;
 
 	import scratch.ScratchComment;
-import scratch.ScratchSprite;
+	import scratch.ScratchSprite;
+	import uiwidgets.DialogBox;
 
-import translation.Translator;
+	import translation.Translator;
 
 	import util.*;
 
@@ -407,6 +408,13 @@ public class ScratchObj extends Sprite {
 		for (var i:int = 0; i < scripts.length; i++) {
 			var b:Block = scripts[i] as Block;
 			if (b && (b.op == Specs.PROCEDURE_DEF)) result.push(b);
+		}
+		if (Scratch.app.runtime.shouldSortPalettes) {
+			result = result.sort(function(a, b) {
+				var textA = a.spec.toUpperCase();
+				var textB = b.spec.toUpperCase();
+				return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;
+			});
 		}
 		return result;
 	}
