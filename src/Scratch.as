@@ -1109,6 +1109,13 @@ public class Scratch extends Sprite {
 		m.showOnStage(stage, b.x, topBarPart.bottom() - 1);
 	}
 
+	public function showPrefMenu(b:*):void {
+		var m:Menu = new Menu(null, 'Preferences', CSS.topBarColor(), 28);
+		m.addItem('Drop Anywhere', runtime.dropAnywhere, true, runtime.canDropAnywhere);
+		var p:Point = b.localToGlobal(new Point(0, 0));
+		m.showOnStage(stage, b.x, topBarPart.bottom() - 1);
+	}
+
 	protected function addEditMenuItems(b:*, m:Menu):void {
 		m.addLine();
 		m.addItem('Edit block colors', editBlockColors);

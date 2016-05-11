@@ -73,6 +73,7 @@ public class ScratchRuntime {
 	public var cloneCount:int;
 	public var edgeTriggersEnabled:Boolean = false; // initially false, becomes true when project first run
 	public var currentDoObj:ScratchObj = null;
+	public var canDropAnywhere:Boolean = true;
 
 	private var microphone:Microphone;
 	private var timerBase:uint;
@@ -1502,6 +1503,10 @@ public class ScratchRuntime {
 			if ((c is Watcher) && (c.isVarWatcherFor(target, vName))) return c;
 		}
 		return null;
+	}
+
+	public function dropAnywhere() {
+		this.canDropAnywhere = !this.canDropAnywhere;
 	}
 
 	// -----------------------------

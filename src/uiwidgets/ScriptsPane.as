@@ -366,6 +366,10 @@ return true; // xxx disable this check for now; it was causing confusion at Scra
 	}
 
 	private function dropCompatible(droppedBlock:Block, target:DisplayObject):Boolean {
+		if (app.runtime.canDropAnywhere) {
+			return true;
+		}
+
 		const menusThatAcceptReporters:Array = [
 			'broadcast', 'costume', 'backdrop', 'scene', 'sound',
 			'spriteOnly', 'spriteOrMouse', 'location', 'spriteOrStage', 'touching'];
