@@ -432,6 +432,9 @@ public class ScratchObj extends Sprite {
 	public function varNames():Array {
 		var varList:Array = [];
 		for each (var v:Variable in variables) varList.push(v.name);
+		if (Scratch.app.runtime.shouldSortPalettes) {
+			varList.sort();
+		}
 		return varList;
 	}
 
@@ -497,6 +500,9 @@ public class ScratchObj extends Sprite {
 	public function listNames():Array {
 		var result:Array = [];
 		for each (var list:ListWatcher in lists) result.push(list.listName);
+		if (Scratch.app.runtime.shouldSortPalettes) {
+			result.sort();
+		}
 		return result;
 	}
 
