@@ -50,6 +50,7 @@ public class Specs {
 	public static const extensionsCategory:int = 20;
 
 	public static var variableColor:int = 0xEE7D16; // Scratch 1.4: 0xF3761D
+	public static var localVariableColor:int = 0xB86011;
 	public static var listColor:int = 0xCC5B22; // Scratch 1.4: 0xD94D11
 	public static var procedureColor:int = 0x632D99; // 0x531E99;
 	public static var parameterColor:int = 0x5947B1;

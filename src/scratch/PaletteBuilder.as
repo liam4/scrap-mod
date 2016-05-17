@@ -170,7 +170,13 @@ public class PaletteBuilder {
 		if (varNames.length > 0) {
 			for each (var n:String in varNames) {
 				addVariableCheckbox(n, false);
-				addItem(new Block(n, 'r', catColor, Specs.GET_VAR), true);
+				var color = catColor
+				if (app.viewedObj().variables.some(function(variable) {
+					return variable.name === n;
+				})) {
+					color = Specs.localVariableColor
+				}
+				addItem(new Block(n, 'r', color, Specs.GET_VAR), true);
 			}
 			nextY += 10;
 			addBlocksForCategory(Specs.dataCategory, catColor);
