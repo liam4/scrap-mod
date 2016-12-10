@@ -74,7 +74,7 @@ import watchers.ListWatcher;
 
 public class Scratch extends Sprite {
 	// Version
-	public static const versionString:String = 'v446';
+	public static const versionString:String = 'v452.1';
 	public static var app:Scratch; // static reference to the app, used for debugging
 
 	// Display modes
@@ -129,6 +129,7 @@ public class Scratch extends Sprite {
 	protected var stagePart:StagePart;
 	private var tabsPart:TabsPart;
 	protected var scriptsPart:ScriptsPart;
+	protected var scriptBrowserPart:ScriptBrowserPart;
 	public var imagesPart:ImagesPart;
 	public var soundsPart:SoundsPart;
 	public const tipsBarClosedWidth:int = 17;
@@ -352,6 +353,10 @@ public class Scratch extends Sprite {
 		imagesPart = new ImagesPart(this);
 	}
 
+	protected function initScriptBrowserPart():void {
+		scriptBrowserPart = new ScriptBrowserPart(this);
+	}
+
 	protected function initInterpreter():void {
 		interp = new Interpreter(this);
 	}
@@ -387,7 +392,8 @@ public class Scratch extends Sprite {
 	}
 
 	protected function startInEditMode():Boolean {
-		return isOffline || isExtensionDevMode;
+		//return isOffline || isExtensionDevMode;
+		return true; // Running the SWF directly from a server is handy
 	}
 
 	public function getMediaLibrary(type:String, whenDone:Function):MediaLibrary {
@@ -616,6 +622,7 @@ public class Scratch extends Sprite {
 		// Note: updatePalette() is called after changing variable, list, or procedure
 		// definitions, so this is a convenient place to clear the interpreter's caches.
 		if (isShowing(scriptsPart)) scriptsPart.updatePalette();
+		if (isShowing(scriptBrowserPart)) scriptBrowserPart.updateContents();
 		if (clearCaches) runtime.clearAllCaches();
 	}
 
@@ -628,6 +635,12 @@ public class Scratch extends Sprite {
 	protected var wasEditing:Boolean;
 
 	public function setPresentationMode(enterPresentation:Boolean):void {
+		if (stagePart.isInPresentationMode() != enterPresentation) {
+			presentationModeWasChanged(enterPresentation);
+		}
+	}
+
+	public function presentationModeWasChanged(enterPresentation:Boolean):void {
 		if (enterPresentation) {
 			wasEditing = editMode;
 			if (wasEditing) {
@@ -646,6 +659,7 @@ public class Scratch extends Sprite {
 		for each (var o:ScratchObj in stagePane.allObjects()) o.applyFilters();
 
 		if (lp) fixLoadProgressLayout();
+		stagePart.presentationModeWasChanged(enterPresentation);
 		stagePane.updateCostume();
 		SCRATCH::allow3d {
 			if (isIn3D) render3D.onStageResize();
@@ -660,7 +674,6 @@ public class Scratch extends Sprite {
 		// Escape exists presentation mode.
 		else if ((evt.charCode == 27) && stagePart.isInPresentationMode()) {
 			setPresentationMode(false);
-			stagePart.exitPresentationMode();
 		}
 		// Handle enter key
 //		else if(evt.keyCode == 13 && !stage.focus) {
@@ -762,6 +775,9 @@ public class Scratch extends Sprite {
 			scriptsPane.viewScriptsFor(obj);
 			scriptsPart.updateSpriteWatermark();
 		}
+		if (isShowing(scriptBrowserPart)) {
+			scriptBrowserPart.selectedSpriteUpdated();
+		}
 	}
 
 	public function setTab(tabName:String):void {
@@ -811,12 +827,14 @@ public class Scratch extends Sprite {
 		libraryPart = getLibraryPart();
 		tabsPart = new TabsPart(this);
 		initScriptsPart();
+		initScriptBrowserPart();
 		initImagesPart();
 		soundsPart = new SoundsPart(this);
 		addChild(topBarPart);
 		addChild(stagePart);
 		addChild(libraryPart);
 		addChild(tabsPart);
+		addChild(scriptBrowserPart);
 	}
 
 	protected function getStagePart():StagePart {
@@ -900,11 +918,9 @@ public class Scratch extends Sprite {
 	}
 
 	protected function updateLayout(w:int, h:int):void {
-		if (!isMicroworld) {
-			topBarPart.x = 0;
-			topBarPart.y = 0;
-			topBarPart.setWidthHeight(w, 28);
-		}
+		topBarPart.x = 0;
+		topBarPart.y = 0;
+		topBarPart.setWidthHeight(w, 28);
 
 		var extraW:int = 2;
 		var extraH:int = stagePart.computeTopBarHeight() + 1;
@@ -955,11 +971,22 @@ public class Scratch extends Sprite {
 	}
 
 	protected function updateContentArea(contentX:int, contentY:int, contentW:int, contentH:int, fullH:int):void {
+		var scriptBrowserH = contentH / 4;
+		if (scriptBrowserH > 200) {
+			scriptBrowserH = 200;
+		} else if (scriptBrowserH < 100) {
+			scriptBrowserH = 100;
+		}
+		scriptBrowserH -= 10;
+
 		imagesPart.x = soundsPart.x = scriptsPart.x = contentX;
 		imagesPart.y = soundsPart.y = scriptsPart.y = contentY;
 		imagesPart.setWidthHeight(contentW, contentH);
 		soundsPart.setWidthHeight(contentW, contentH);
-		scriptsPart.setWidthHeight(contentW, contentH);
+		scriptsPart.setWidthHeight(contentW, contentH - (scriptBrowserH + 5));
+		scriptBrowserPart.x = contentX;
+		scriptBrowserPart.y = scriptsPart.bottom() + 5;
+		scriptBrowserPart.setWidthHeight(contentW, scriptBrowserH);
 
 		if (mediaLibrary) mediaLibrary.setWidthHeight(topBarPart.w, fullH);
 		if (frameRateGraph) {
@@ -1605,6 +1632,14 @@ public class Scratch extends Sprite {
 			fileList.browse(filter != null ? [filter] : null);
 		} catch (e:*) {
 		}
+	}
+
+	// -----------------------------
+	// Browse Scripts
+	//------------------------------
+
+	public function selectScript(script:Block):void {
+		scriptsPane.viewOneScript(script);
 	}
 
 	// -----------------------------

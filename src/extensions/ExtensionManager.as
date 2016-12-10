@@ -55,6 +55,13 @@ public class ExtensionManager {
 	static public const wedoExt:String = 'LEGO WeDo';
 	static public const wedo2Ext:String = 'LEGO WeDo 2.0';
 
+	// Experimental extensions must be hosted on one of these domains
+	// These should start with '.' to avoid accepting things like 'malicious.not_github.io'
+	static public const allowedDomains:Vector.<String> = new <String>[
+			'.github.io',
+			'.coding.me'
+	];
+
 	public function ExtensionManager(app:Scratch) {
 		this.app = app;
 		clearImportedExtensions();
@@ -207,6 +214,7 @@ public class ExtensionManager {
 			descriptor.extensionName = ext.name;
 			descriptor.blockSpecs = ext.blockSpecs;
 			descriptor.menus = ext.menus;
+			if (ext.url) descriptor.url = ext.url;
 			if(ext.port) descriptor.extensionPort = ext.port;
 			else if(ext.javascriptURL) descriptor.javascriptURL = ext.javascriptURL;
 			result.push(descriptor);
@@ -263,7 +271,7 @@ public class ExtensionManager {
 			ext = new ScratchExtension(extObj.extensionName, extObj.extensionPort);
 		ext.port = extObj.extensionPort;
 		ext.blockSpecs = extObj.blockSpecs;
-		if(extObj.url) ext.url = extObj.url;
+		if (extObj.url) ext.url = extObj.url;
 		ext.showBlocks = true;
 		ext.menus = extObj.menus;
 		ext.javascriptURL = extObj.javascriptURL;
@@ -315,6 +323,7 @@ public class ExtensionManager {
 
 			var ext:ScratchExtension = new ScratchExtension(extObj.extensionName, extObj.extensionPort || 0);
 			ext.blockSpecs = extObj.blockSpecs;
+			if (extObj.url) ext.url = extObj.url;
 			ext.showBlocks = true;
 			ext.isInternal = false;
 			ext.menus = extObj.menus;
@@ -323,8 +332,19 @@ public class ExtensionManager {
 					extensionRefused(extObj, 'Experimental extensions are only supported on ScratchX.');
 					continue;
 				}
-				if (!StringUtil.endsWith(URLUtil.getServerName(extObj.javascriptURL).toLowerCase(),'.github.io')) {
-					extensionRefused(extObj, 'Experimental extensions must be hosted on GitHub Pages.');
+				var domainAllowed:Boolean = false;
+				var url:String = URLUtil.getServerName(extObj.javascriptURL).toLowerCase();
+				for (var i:int = 0; i < allowedDomains.length; ++i) {
+					if (StringUtil.endsWith(url, allowedDomains[i])) {
+						domainAllowed = true;
+						break;
+					}
+				}
+				if (!domainAllowed) {
+					extensionRefused(
+							extObj,
+							'Experimental extensions must be hosted on an approved domain. Approved domains are: ' +
+							allowedDomains.join(', '));
 					continue;
 				}
 				ext.javascriptURL = extObj.javascriptURL;

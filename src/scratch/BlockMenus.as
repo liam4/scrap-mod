@@ -568,14 +568,8 @@ public class BlockMenus implements DragClient {
 		if (block.op != Specs.CALL) return;
 		var def:Block = app.viewedObj().lookupProcedure(block.spec);
 		if (!def) return;
-		var pane:ScriptsPane = def.parent as ScriptsPane;
-		if (!pane) return;
-		if (pane.parent is ScrollFrame) {
-		   pane.x = 5 - def.x*pane.scaleX;
-		   pane.y = 5 - def.y*pane.scaleX;
-		   (pane.parent as ScrollFrame).constrainScroll();
-		   (pane.parent as ScrollFrame).updateScrollbars();
-		}
+
+		app.selectScript(def);
 	}
 
 	private function editProcSpec():void {
@@ -632,14 +626,14 @@ public class BlockMenus implements DragClient {
 		}
 		var myName:String = isGetter ? blockVarOrListName() : null;
 		var listName:String;
-		for each (listName in app.stageObj().listNames()) {
-			if (listName != myName) m.addItem(listName);
-		}
 		if (!app.viewedObj().isStage) {
-			m.addLine();
 			for each (listName in app.viewedObj().listNames()) {
 				if (listName != myName) m.addItem(listName);
 			}
+			m.addLine();
+		}
+		for each (listName in app.stageObj().listNames()) {
+			if (listName != myName) m.addItem(listName);
 		}
 		showMenu(m);
 	}
@@ -655,14 +649,14 @@ public class BlockMenus implements DragClient {
 			if (isGetter) addGenericBlockItems(m);
 			var myName:String = blockVarOrListName();
 			var vName:String;
-			for each (vName in app.stageObj().varNames()) {
-				if (!isGetter || (vName != myName)) m.addItem(vName);
-			}
 			if (!app.viewedObj().isStage) {
-				m.addLine();
 				for each (vName in app.viewedObj().varNames()) {
 					if (!isGetter || (vName != myName)) m.addItem(vName);
 				}
+				m.addLine();
+			}
+			for each (vName in app.stageObj().varNames()) {
+				if (!isGetter || (vName != myName)) m.addItem(vName);
 			}
 		}
 		showMenu(m);

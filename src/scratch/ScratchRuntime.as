@@ -94,7 +94,7 @@ public class ScratchRuntime {
 	//------------------------------
 
 	public function stepRuntime():void {
-		if (projectToInstall != null && (app.isOffline || app.isExtensionDevMode)) {
+		if (projectToInstall != null) {
 			installProject(projectToInstall);
 			if (saveAfterInstall) app.setSaveNeeded(true);
 			projectToInstall = null;
@@ -513,7 +513,7 @@ public class ScratchRuntime {
 
 //----------
 	public function stopAll():void {
-		interp.stopAllThreads();
+		interp.stopAllThreads();  // this does clearAskPrompts now
 		clearRunFeedback();
 		app.stagePane.deleteClones();
 		cloneCount = 0;
@@ -525,7 +525,6 @@ public class ScratchRuntime {
 			s.clearFilters();
 			s.hideBubble();
 		}
-		clearAskPrompts();
 		app.removeLoadProgressBox();
 		motionDetector = null;
 	}
@@ -906,7 +905,16 @@ public class ScratchRuntime {
 		setTimeout(p.grabKeyboardFocus, 100); // workaround for Window keyboard event handling
 	}
 
+	private function hideAskBubble():void {
+		if (interp.askThread && interp.askThread.target) {
+			if (interp.askThread.target!=app.stagePane && interp.askThread.target.bubble) {
+				if (interp.askThread.target.bubble.style=='ask') interp.askThread.target.hideBubble();
+			}
+		}
+	}
+
 	public function hideAskPrompt(p:AskPrompter):void {
+		hideAskBubble();
 		interp.askThread = null;
 		lastAnswer = p.answer();
 		if (p.parent) {
@@ -925,6 +933,7 @@ public class ScratchRuntime {
 	}
 
 	public function clearAskPrompts():void {
+		hideAskBubble();
 		interp.askThread = null;
 		var allPrompts:Array = [];
 		var uiLayer:Sprite = app.stagePane.getUILayer();

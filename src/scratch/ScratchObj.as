@@ -409,14 +409,17 @@ public class ScratchObj extends Sprite {
 			var b:Block = scripts[i] as Block;
 			if (b && (b.op == Specs.PROCEDURE_DEF)) result.push(b);
 		}
-		if (Scratch.app.runtime.shouldSortPalettes) {
-			result = result.sort(function(a, b) {
-				var textA = a.spec.toUpperCase();
-				var textB = b.spec.toUpperCase();
-				return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;
-			});
-		}
-		return result;
+		return result.sort(function(a:Block, b:Block) {
+      var aStr = a.getSummary();
+      var bStr = b.getSummary();
+      if (aStr < bStr) {
+        return -1;
+      } else if (aStr > bStr) {
+        return 1;
+      } else {
+        return 0;
+      }
+    });
 	}
 
 	public function lookupProcedure(procName:String):Block {
@@ -435,7 +438,7 @@ public class ScratchObj extends Sprite {
 		if (Scratch.app.runtime.shouldSortPalettes) {
 			varList.sort();
 		}
-		return varList;
+		return varList.sort();
 	}
 
 	public function setVarTo(varName:String, value:*):void {
@@ -500,10 +503,7 @@ public class ScratchObj extends Sprite {
 	public function listNames():Array {
 		var result:Array = [];
 		for each (var list:ListWatcher in lists) result.push(list.listName);
-		if (Scratch.app.runtime.shouldSortPalettes) {
-			result.sort();
-		}
-		return result;
+		return result.sort();
 	}
 
 	public function ownsList(listName:String):Boolean {

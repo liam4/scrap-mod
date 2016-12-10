@@ -75,6 +75,7 @@ public class Block extends Sprite {
 	public var parameterNames:Array;	// used by procedure definition hats; null for other blocks
 	public var warpProcFlag:Boolean;	// used by procedure definition hats to indicate warp speed
 	public var rightToLeft:Boolean;
+	public var draggable:Boolean;
 
 	public var isHat:Boolean = false;
 	public var isAsyncHat:Boolean = false;
@@ -134,6 +135,8 @@ public class Block extends Sprite {
 		} else if (type == "b") {
 			base = new BlockShape(BlockShape.BooleanShape, color);
 			isReporter = true;
+			forceAsync = Scratch.app.extensionManager.shouldForceAsync(op);
+			isRequester = forceAsync;
 			indentLeft = 9;
 			indentRight = 7;
 		} else if (type == "r" || type == "R") {
@@ -177,6 +180,7 @@ public class Block extends Sprite {
 		}
 		addChildAt(base, 0);
 		setSpec(this.spec, defaultArgs);
+		draggable = true;
 
 		addEventListener(FocusEvent.KEY_FOCUS_CHANGE, focusChange);
 	}
@@ -883,6 +887,15 @@ public class Block extends Sprite {
 		// TODO: Remove any waiting reporter data in the Scratch.app.extensionManager
 		if (parent is Block) Block(parent).removeBlock(this);
 		else if (parent) parent.removeChild(this);
+
+		// Remove from the Scratch object that holds the block, if it's in the
+		// object's script array
+		var obj:ScratchObj = app.viewedObj();
+		var index:int = obj.scripts.indexOf(this);
+		if (index >= 0) {
+			obj.scripts.splice(index, 1);
+		}
+
 		this.cacheAsBitmap = false;
 		// set position for undelete
 		x = top.x;
@@ -919,13 +932,21 @@ public class Block extends Sprite {
 	/* Dragging */
 
 	public function objToGrab(evt:MouseEvent):Block {
+		if (!draggable) return null;
 		if (isEmbeddedParameter() || isInPalette()) return duplicate(false, Scratch.app.viewedObj() is ScratchStage);
 		return this;
 	}
 
 	/* Events */
 
+	public var clickOverride:Function;
+
 	public function click(evt:MouseEvent):void {
+		if (clickOverride) {
+			clickOverride();
+			return;
+		}
+
 		if (editArg(evt)) return;
 		Scratch.app.runtime.interp.toggleThread(topBlock(), Scratch.app.viewedObj(), 1);
 	}
