@@ -73,6 +73,7 @@ public class Specs {
 		[11, "Parameter",	parameterColor],
 		[12, "List",		listColor],
 		[20, "Extension",	extensionsColor],
+		[13, "Misc",	0x282828],
 	];
 
 	public static function blockColor(categoryID:int):int {
@@ -360,6 +361,45 @@ public class Specs {
 		["show list %m.list",								" ", 12, "showList:"],
 		["hide list %m.list",								" ", 12, "hideList:"],
 
+		
+		// Added
+		["forever if %b",						"cf",6, "doForeverIf"],
+		["for each %m.varName in %s",			"c", 6, "doForLoop", "v", 10],
+		["while %b",							"c", 6, "doWhile"],
+		["all at once",							"c", 6, "warpSpeed"],
+		["noop",								"r", 13, "COUNT"],
+		["counter",								"r", 13, "COUNT"],
+		["clear counter",						" ", 13, "CLR_COUNT"],
+		["incr counter",						" ", 13, "INCR_COUNT"],
+		["play drum %n for %n beats",			" ", 3, "drum:duration:elapsed:from:", 1, 0.25], // Scratch 1.4 MIDI drum
+		["set instrument to %n",				" ", 3, "midiInstrument:", 1],
+		["loud?",								"b", 3, "isLoud"],
+		["abs %n",								"r", 8, "abs"],
+		["sqrt %n",								"r", 8, "sqrt"],
+		["stop script",							"f", 6, "doReturn"],
+		["stop all",							"f", 6, "stopAll"],
+		
+		// Added for Stage
+		["forever if %b",						"cf",106, "doForeverIf"],
+		["for each %m.varName in %s",			"c", 106, "doForLoop", "v", 10],
+		["while %b",							"c", 106, "doWhile"],
+		["all at once",							"c", 106, "warpSpeed"],
+		["noop",								"r", 113, "COUNT"],
+		["counter",								"r", 113, "COUNT"],
+		["clear counter",						" ", 113, "CLR_COUNT"],
+		["incr counter",						" ", 113, "INCR_COUNT"],
+		["play drum %n for %n beats",			" ", 103, "drum:duration:elapsed:from:", 1, 0.25], // Scratch 1.4 MIDI drum
+		["set instrument to %n",				" ", 103, "midiInstrument:", 1],
+		["loud?",								"b", 103, "isLoud"],
+		["abs %n",								"r", 108, "abs"],
+		["sqrt %n",								"r", 108, "sqrt"],
+		["stop script",							"f", 106, "doReturn"],
+		["stop all",							"f", 106, "stopAll"],
+		
+		
+		
+		
+		
 		// obsolete blocks from Scratch 1.4 that may be used in older projects
 		["play drum %n for %n beats",			" ", 98, "drum:duration:elapsed:from:", 1, 0.25], // Scratch 1.4 MIDI drum
 		["set instrument to %n",				" ", 98, "midiInstrument:", 1],
