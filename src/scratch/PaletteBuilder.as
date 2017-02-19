@@ -170,8 +170,10 @@ public class PaletteBuilder {
 
 		function addBlocks(names:Array):void {
 			for each (var n:String in names) {
-				addVariableCheckbox(n, getSpec === Specs.GET_LIST);
-				addItem(new Block(n, 'r', catColor, getSpec), true);
+				if (n.indexOf(Specs.SCRAP_PREFIX) != 0) {
+					addVariableCheckbox(n, getSpec === Specs.GET_LIST);
+					addItem(new Block(n, 'r', catColor, getSpec), true);
+				}
 			}
 		}
 
