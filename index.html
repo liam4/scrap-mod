@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <meta charset='utf-8'>
+    <meta name='viewport' content='width=device-width'>
+
     <title>Scrap</title>
     <style>
       html, body {
@@ -11,7 +14,7 @@
       }
 
       body {
-        font-family: sans-serif;
+        font-family: 'Arial', 'Verdana', 'DejaVu Sans', sans-serif;
         line-height: 1.2em;
         background-color: white;
         color: #333;
@@ -31,6 +34,20 @@
         float: left;
         margin-right: 30px;
         margin-bottom: 30px;
+      }
+
+      @media screen and (max-width: 800px) {
+        .content {
+          max-width: 600px;
+          font-size: 14px;
+        }
+
+        img {
+          float: none;
+          margin: auto;
+          display: block;
+          max-width: 100%;
+        }
       }
 
       #legal {
