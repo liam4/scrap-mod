@@ -1,7 +1,0 @@
-
-*.bat text eol=crlf
-
-.gitattributes text eol=lf
-.gitignore text eol=lf
-.gitmodules text eol=lf
-gradlew text eol=lf
