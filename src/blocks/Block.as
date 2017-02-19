@@ -50,6 +50,9 @@ import uiwidgets.*;
 
 import util.*;
 
+// XXX:
+import flash.external.ExternalInterface;
+
 public class Block extends Sprite {
 
 	private const minCommandWidth:int = 36;
@@ -113,6 +116,17 @@ public class Block extends Sprite {
 	private var originalParent:DisplayObjectContainer, originalRole:int, originalIndex:int, originalPosition:Point;
 
 	public function Block(spec:String, type:String = " ", color:int = 0xD00000, op:* = 0, defaultArgs:Array = null) {
+		// Scrap library blocks:
+		if (spec == Specs.SCRAP_TRUE) {
+			type = "b";
+			spec = "false";
+			color = Specs.extensionsColor;
+		} else if (spec == Specs.SCRAP_FALSE) {
+			type = "b";
+			spec = "false";
+			color = Specs.extensionsColor;
+		}
+
 		this.spec = Translator.map(spec);
 		this.type = type;
 		this.op = op;
@@ -345,10 +359,12 @@ public class Block extends Sprite {
 		argTypes = [];
 		for (i = 0; i < specParts.length; i++) {
 			var o:DisplayObject = argOrLabelFor(specParts[i], c);
-			labelsAndArgs.push(o);
 			var argType:String = 'icon';
+
 			if (o is BlockArg) argType = specParts[i];
 			if (o is TextField) argType = 'label';
+
+			labelsAndArgs.push(o);
 			argTypes.push(argType);
 		}
 	}

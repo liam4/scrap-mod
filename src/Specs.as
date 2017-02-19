@@ -31,6 +31,10 @@ package {
 
 public class Specs {
 
+	public static const SCRAP_PREFIX:String = "$$SCRAP__";
+	public static const SCRAP_TRUE:String = SCRAP_PREFIX + "TRUE";
+	public static const SCRAP_FALSE:String = SCRAP_PREFIX + "FALSE";
+
 	public static const GET_VAR:String = "readVariable";
 	public static const SET_VAR:String = "setVar:to:";
 	public static const CHANGE_VAR:String = "changeVar:by:";
