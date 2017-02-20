@@ -870,7 +870,7 @@ public class BlockMenus implements DragClient {
 
 				blockArg.setArgValue(n);
 
-				n = Specs.SCRAP_VAR + msg + Specs.SCRAP_VAR_SEPARATOR + n;
+				n = Specs.BROADCAST_VAR + msg + Specs.SCRAP_VAR_SEPARATOR + n;
 				app.stagePane.lookupOrCreateVar(n);
 
 				app.updatePalette();

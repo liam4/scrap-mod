@@ -196,7 +196,7 @@ public class PaletteBuilder {
       if (entries.length) {
         for each (var entry:Array in entries) {
           var realName:String = entry[1];
-          addItem(new Block(realName, 'r', Specs.blockColor(Specs.eventsCategory), getSpec));
+          addItem(new Block(realName, 'r', 0, getSpec));
         }
         nextY += 10;
         addSeparator();
@@ -388,7 +388,7 @@ public class PaletteBuilder {
          ["bc", "var", "value"], ["message1", "", "0"], false],
         ["setVar:to:",
          ["concatenate:with:",
-          Specs.SCRAP_VAR,
+          Specs.BROADCAST_VAR,
           ["concatenate:with:",
            ["getParam", "bc", "r"],
            ["concatenate:with:",

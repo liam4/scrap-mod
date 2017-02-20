@@ -125,8 +125,9 @@ public class Block extends Sprite {
 			type = "b";
 			spec = "false";
 			color = Specs.extensionsColor;
-		} else if (spec.indexOf(Specs.SCRAP_VAR) == 0) {
+		} else if (spec.indexOf(Specs.BROADCAST_VAR) == 0) {
 			spec = spec.slice(spec.indexOf(Specs.SCRAP_VAR_SEPARATOR) + 1);
+			color = Specs.blockColor(Specs.eventsCategory);
 		}
 
 		this.spec = Translator.map(spec);

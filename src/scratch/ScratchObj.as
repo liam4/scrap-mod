@@ -466,7 +466,7 @@ public class ScratchObj extends Sprite {
 	public function varNames():Array {
 		var varList:Array = [];
 		for each (var v:Variable in variables) {
-			if (v.name.indexOf(Specs.SCRAP_VAR) !== 0) {
+			if (v.name.indexOf(Specs.SCRAP_PREFIX) !== 0) {
 				varList.push(v.name);
 			}
 		}
