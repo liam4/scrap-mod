@@ -66,12 +66,13 @@ public class BlockIO {
 	private static function blockToArray(b:Block):Array {
 		// Return an array structure for this block.
 		var result:Array = [b.op];
-		if (b.op == Specs.GET_VAR) return [Specs.GET_VAR, b.spec];		// variable reporter
-		if (b.op == Specs.GET_LIST) return [Specs.GET_LIST, b.spec];	// list reporter
-		if (b.op == Specs.GET_PARAM) return [Specs.GET_PARAM, b.spec, b.type]; // parameter reporter
+		var spec:String = b.actualSpec;
+		if (b.op == Specs.GET_VAR) return [Specs.GET_VAR, spec];		// variable reporter
+		if (b.op == Specs.GET_LIST) return [Specs.GET_LIST, spec];	// list reporter
+		if (b.op == Specs.GET_PARAM) return [Specs.GET_PARAM, spec, b.type]; // parameter reporter
 		if (b.op == Specs.PROCEDURE_DEF)								// procedure definition
 			return [Specs.PROCEDURE_DEF, b.spec, b.parameterNames, b.defaultArgValues, b.warpProcFlag];
-		if (b.op == Specs.CALL) result = [Specs.CALL, b.spec];			// procedure call - arguments follow spec
+		if (b.op == Specs.CALL) result = [Specs.CALL, spec];			// procedure call - arguments follow spec
 		for each (var a:* in b.normalizedArgs()) {
 			// Note: arguments are always saved in normalized (i.e. left-to-right) order
 			if (a is Block) result.push(blockToArray(a));

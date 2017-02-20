@@ -115,21 +115,17 @@ public class Block extends Sprite {
 
 	public function Block(spec:String, type:String = " ", color:int = 0xD00000, op:* = 0, defaultArgs:Array = null) {
 		// Scrap library blocks:
-		if (spec == Specs.SCRAP_TRUE) {
-			this.actualSpec = spec;
+		actualSpec = spec;
 
+		if (spec == Specs.SCRAP_TRUE) {
 			type = "b";
 			spec = "true";
 			color = Specs.extensionsColor;
 		} else if (spec == Specs.SCRAP_FALSE) {
-			this.actualSpec = spec;
-
 			type = "b";
 			spec = "false";
 			color = Specs.extensionsColor;
 		} else if (spec.indexOf(Specs.SCRAP_VAR) == 0) {
-			this.actualSpec = spec;
-
 			spec = spec.slice(spec.indexOf(Specs.SCRAP_VAR_SEPARATOR) + 1);
 		}
 
@@ -617,7 +613,7 @@ public class Block extends Sprite {
 	}
 
 	public function duplicate(forClone:Boolean, forStage:Boolean = false):Block {
-		var newSpec:String = spec;
+		var newSpec:String = actualSpec;
 		if (op == 'whenClicked') newSpec = forStage ? 'when Stage clicked' : 'when this sprite clicked';
 		var dup:Block = new Block(newSpec, type, (int)(forClone ? -1 : base.color), op);
 		dup.isRequester = isRequester;
@@ -625,7 +621,6 @@ public class Block extends Sprite {
 		dup.parameterNames = parameterNames;
 		dup.defaultArgValues = defaultArgValues;
 		dup.warpProcFlag = warpProcFlag;
-		dup.setSpec(newSpec);
 		if (forClone) {
 			dup.copyArgsForClone(args);
 		} else {
