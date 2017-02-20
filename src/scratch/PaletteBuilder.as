@@ -363,7 +363,7 @@ public class PaletteBuilder {
   private function addScrapLibrary():void {
     var targetObj:ScratchObj = app.viewedObj();
 
-    // Remove Scrap library, first.
+    // Remove Scrap library scripts, first.
     var newScripts:Array = [];
     for each (var script in targetObj.scripts) {
       if (script.op === Specs.PROCEDURE_DEF && script.spec.indexOf(Specs.SCRAP_PREFIX) === 0) {
@@ -373,6 +373,14 @@ public class PaletteBuilder {
     }
     targetObj.scripts = newScripts;
 
+    // We'll also want to remove Scrap variables.
+    for each (var v:Variable in targetObj.variables) {
+      if (v.name.indexOf(Specs.SCRAP_PREFIX) === 0) {
+        targetObj.deleteVar(v.name);
+      }
+    }
+
+    // Normal library blocks - basically custom blocks.
     targetObj.addJSONScripts([
       [10, 10, [
         ["procDef",
@@ -388,6 +396,10 @@ public class PaletteBuilder {
          ["getParam", "value", "r"]]
       ]]
     ]);
+
+    // Extra library blocks - these behave as variables.
+    targetObj.setVarTo(Specs.SCRAP_TRUE, true);
+    targetObj.setVarTo(Specs.SCRAP_FALSE, false);
 
     app.updatePalette()
   }
