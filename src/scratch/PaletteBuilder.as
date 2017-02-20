@@ -145,6 +145,9 @@ public class PaletteBuilder {
     var magicDefinitions:Array = app.viewedObj().magicProcedureDefinitions();
     if (magicDefinitions.length > 0) {
       nextY += 5;
+      addItem(new Block(Specs.SCRAP_TRUE,  'r', Specs.extensionsColor, Specs.GET_VAR));
+      addItem(new Block(Specs.SCRAP_FALSE, 'r', Specs.extensionsColor, Specs.GET_VAR));
+      nextY += 5;
       for each (var proc:Block in magicDefinitions) {
         b = new Block(proc.spec, ' ', Specs.extensionsColor, Specs.CALL, proc.defaultArgValues);
         addItem(b);
@@ -182,6 +185,7 @@ public class PaletteBuilder {
   private function showDataCategory():void {
     var catColor:int = Specs.variableColor;
     var getSpec:String = Specs.GET_VAR;
+    var anyVars:Boolean = false;
 
     // Broadcast variables, if a when-I-receive is selected
     var stg:ScratchStage = app.stagePane;
@@ -194,8 +198,9 @@ public class PaletteBuilder {
           var realName:String = entry[1];
           addItem(new Block(realName, 'r', Specs.blockColor(Specs.eventsCategory), getSpec));
         }
-        nextY += 15;
+        nextY += 10;
         addSeparator();
+        nextY += 15;
       }
     }
 
@@ -205,6 +210,7 @@ public class PaletteBuilder {
     function addBlocks(names:Array):void {
       for each (var n:String in names) {
         if (n.indexOf(Specs.SCRAP_PREFIX) != 0) {
+          anyVars = true;
           addVariableCheckbox(n, getSpec === Specs.GET_LIST);
           addItem(new Block(n, 'r', catColor, getSpec), true);
         }
@@ -224,9 +230,11 @@ public class PaletteBuilder {
       addBlocks(stageVarNames);
     }
 
-    nextY += 10;
-    addBlocksForCategory(Specs.dataCategory, catColor);
-    nextY += 15;
+    if (anyVars) {
+      nextY += 10;
+      addBlocksForCategory(Specs.dataCategory, catColor);
+      nextY += 15;
+    }
 
     // lists
     catColor = Specs.listColor;
@@ -358,7 +366,7 @@ public class PaletteBuilder {
     // Remove Scrap library, first.
     var newScripts:Array = [];
     for each (var script in targetObj.scripts) {
-      if (script.op === Specs.PROCEDURE_DEF && script.spec.indexOf(Specs.PREFIX) === 0) {
+      if (script.op === Specs.PROCEDURE_DEF && script.spec.indexOf(Specs.SCRAP_PREFIX) === 0) {
         continue;
       }
       newScripts.push(script);
@@ -369,14 +377,14 @@ public class PaletteBuilder {
       [10, 10, [
         ["procDef",
          Specs.SCRAP_PREFIX + "set broadcast %m.broadcast 's var %m.broadcastVar to %s",
-         ["bc", "var", "value"], ["", "", ""], false],
+         ["bc", "var", "value"], ["message1", "", "0"], false],
         ["setVar:to:",
          ["concatenate:with:",
           Specs.SCRAP_VAR,
           ["concatenate:with:",
            ["getParam", "bc", "r"],
            ["concatenate:with:",
-            ">", ["getParam", "var", "r"]]]],
+            Specs.SCRAP_VAR_SEPARATOR, ["getParam", "var", "r"]]]],
          ["getParam", "value", "r"]]
       ]]
     ]);
