@@ -34,6 +34,7 @@ public class Specs {
 	public static const SCRAP_PREFIX:String = "$$SCRAP-";
 	public static const SCRAP_TRUE:String = SCRAP_PREFIX + "true";
 	public static const SCRAP_FALSE:String = SCRAP_PREFIX + "false";
+	public static const SCRAP_VAR:String = SCRAP_PREFIX + "broadcast-";
 
 	public static const GET_VAR:String = "readVariable";
 	public static const SET_VAR:String = "setVar:to:";
