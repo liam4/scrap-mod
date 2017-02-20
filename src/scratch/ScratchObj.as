@@ -30,15 +30,15 @@ package scratch {
 
 	import flash.display.*;
 	import flash.events.MouseEvent;
-import flash.geom.ColorTransform;
-import flash.utils.*;
+	import flash.geom.ColorTransform;
+	import flash.utils.*;
 
 	import interpreter.*;
 
 	import scratch.ScratchComment;
-import scratch.ScratchSprite;
+	import scratch.ScratchSprite;
 
-import translation.Translator;
+	import translation.Translator;
 
 	import util.*;
 
@@ -374,7 +374,7 @@ public class ScratchObj extends Sprite {
 		var result:Array = [];
 		for each (var script:Block in scripts) {
 			if (script.op === Specs.PROCEDURE_DEF) {
-				if (script.spec.indexOf(Specs.MAGIC_PROC_PREFIX) === 0) {
+				if (script.spec.indexOf(Specs.SCRAP_PREFIX) === 0) {
 					continue;
 				}
 			}
@@ -387,7 +387,7 @@ public class ScratchObj extends Sprite {
 		var result:Array = [];
 		for each (var script:Block in scripts) {
 			if (script.op === Specs.PROCEDURE_DEF) {
-				if (script.spec.indexOf(Specs.MAGIC_PROC_PREFIX) === 0) {
+				if (script.spec.indexOf(Specs.SCRAP_PREFIX) === 0) {
 					result.push(script);
 				}
 			}
@@ -433,7 +433,7 @@ public class ScratchObj extends Sprite {
 			var b:Block = scripts[i] as Block;
 			if (
 				b && (b.op == Specs.PROCEDURE_DEF) &&
-				b.spec.indexOf(Specs.MAGIC_PROC_PREFIX) !== 0
+				b.spec.indexOf(Specs.SCRAP_PREFIX) !== 0
 			) result.push(b);
 		}
 		return sortScriptsArray(result);
@@ -466,7 +466,7 @@ public class ScratchObj extends Sprite {
 	public function varNames():Array {
 		var varList:Array = [];
 		for each (var v:Variable in variables) {
-			if (v.name.indexOf(Specs.BROADCAST_VAR_PREFIX) !== 0) {
+			if (v.name.indexOf(Specs.SCRAP_VAR) !== 0) {
 				varList.push(v.name);
 			}
 		}

@@ -66,6 +66,7 @@ public class Block extends Sprite {
 	public static var MenuHandlerFunction:Function;	// optional function to handle block and blockArg menus
 
 	public var spec:String;
+	public var actualSpec:String = "";
 	public var type:String;
 	public var op:String = "";
 	public var opFunction:Function;
@@ -113,6 +114,25 @@ public class Block extends Sprite {
 	private var originalParent:DisplayObjectContainer, originalRole:int, originalIndex:int, originalPosition:Point;
 
 	public function Block(spec:String, type:String = " ", color:int = 0xD00000, op:* = 0, defaultArgs:Array = null) {
+		// Scrap library blocks:
+		if (spec == Specs.SCRAP_TRUE) {
+			this.actualSpec = spec;
+
+			type = "b";
+			spec = "true";
+			color = Specs.extensionsColor;
+		} else if (spec == Specs.SCRAP_FALSE) {
+			this.actualSpec = spec;
+
+			type = "b";
+			spec = "false";
+			color = Specs.extensionsColor;
+		} else if (spec.indexOf(Specs.SCRAP_VAR) == 0) {
+			this.actualSpec = spec;
+
+			spec = spec.slice(spec.indexOf(Specs.SCRAP_VAR_SEPARATOR) + 1);
+		}
+
 		this.spec = Translator.map(spec);
 		this.type = type;
 		this.op = op;
@@ -345,16 +365,20 @@ public class Block extends Sprite {
 		argTypes = [];
 		for (i = 0; i < specParts.length; i++) {
 			var o:DisplayObject = argOrLabelFor(specParts[i], c);
+
 			if (o is TextField) {
 				var tf:TextField = (o as TextField);
-				if (tf.text.indexOf(Specs.MAGIC_PROC_PREFIX) === 0) {
-					tf.text = Specs.MAGIC_PROC_HUMAN + ' ' + tf.text.slice(Specs.MAGIC_PROC_PREFIX.length);
+				if (tf.text.indexOf(Specs.SCRAP_PREFIX) == 0) {
+					tf.text = tf.text.slice(Specs.SCRAP_PREFIX.length);
 				}
 			}
-			labelsAndArgs.push(o);
+
 			var argType:String = 'icon';
+
 			if (o is BlockArg) argType = specParts[i];
 			if (o is TextField) argType = 'label';
+
+			labelsAndArgs.push(o);
 			argTypes.push(argType);
 		}
 	}

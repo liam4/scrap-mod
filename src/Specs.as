@@ -30,6 +30,11 @@ package {
 	import assets.Resources;
 
 public class Specs {
+	public static const SCRAP_PREFIX:String = "$$SCRAP-";
+	public static const SCRAP_TRUE:String = SCRAP_PREFIX + "true";
+	public static const SCRAP_FALSE:String = SCRAP_PREFIX + "false";
+	public static const SCRAP_VAR:String = SCRAP_PREFIX + "broadcast-";
+	public static const SCRAP_VAR_SEPARATOR:String = "\u0831";
 
 	public static const GET_VAR:String = "readVariable";
 	public static const SET_VAR:String = "setVar:to:";
@@ -38,10 +43,6 @@ public class Specs {
 	public static const CALL:String = "call";
 	public static const PROCEDURE_DEF:String = "procDef";
 	public static const GET_PARAM:String = "getParam";
-
-	public static const MAGIC_PROC_PREFIX:String = "$$SCRAP:";
-	public static const MAGIC_PROC_HUMAN:String = "(Scrap)";
-	public static const BROADCAST_VAR_PREFIX:String = "$$broadcast-";
 
 	public static const motionCategory:int = 1;
 	public static const looksCategory:int = 2;
