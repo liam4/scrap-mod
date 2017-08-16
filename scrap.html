@@ -21,5 +21,11 @@
       <param name='movie' value='Scrap.swf'>
       <embed src='Scrap.swf' width='100%' height='100%'>
     </object>
+    <script>
+      window.addEventListener('beforeunload', function(evt) {
+        evt.preventDefault()
+        return 'A non-null string. :tada:'
+      })
+    </script>
   </body>
 </html>
