@@ -87,14 +87,20 @@ package util {
       if (atEnd()) return '';
       var token:String = '';
       var isArg:Boolean;
+      var isIcon:Boolean;
       var start:int = i;
       while (i < src.length) {
-        if (src.charCodeAt(i) <= 32) break;
+        if ((isArg || isIcon) && src.charCodeAt(i) <= 32) break;
+        if (src.charCodeAt(i) < 32) break;
         var ch:String = src.charAt(i);
         if (ch == '\\') {
           token += ch + src.charAt(i + 1);
           i += 2;
           continue;
+        }
+        if (ch == '@') {
+          if (i > start) break;
+          isIcon = true;
         }
         if (ch == '%') {
           if (i > start) break; // percent sign starts new token
