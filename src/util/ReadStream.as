@@ -23,6 +23,8 @@
 // A simple character stream with two character look-ahead and tokenization.
 
 package util {
+  import uiwidgets.DialogBox;
+
   public class ReadStream {
 
     private var src:String, i:int;
@@ -89,20 +91,25 @@ package util {
       var isArg:Boolean;
       var isIcon:Boolean;
       var start:int = i;
+      var whitespace:int = 0;
       while (i < src.length) {
+        var ch:String = src.charAt(i);
         if ((isArg || isIcon) && src.charCodeAt(i) <= 32) break;
         if (src.charCodeAt(i) < 32) break;
-        var ch:String = src.charAt(i);
+        if (src.charCodeAt(i) == 32) whitespace++;
+        else if (ch !== '%' && ch !== '@') whitespace = 0;
         if (ch == '\\') {
           token += ch + src.charAt(i + 1);
           i += 2;
           continue;
         }
         if (ch == '@') {
+          if (whitespace) token = token.slice(0, -whitespace);
           if (i > start) break;
           isIcon = true;
         }
         if (ch == '%') {
+          if (whitespace) token = token.slice(0, -whitespace);
           if (i > start) break; // percent sign starts new token
           isArg = true;
         }
