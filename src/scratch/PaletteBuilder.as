@@ -141,7 +141,7 @@ public class PaletteBuilder {
       nextY += 5;
     }
 
-    addAddLibraryButton();
+    addLibraryButtons();
     var magicDefinitions:Array = app.viewedObj().magicProcedureDefinitions();
     if (magicDefinitions.length > 0) {
       nextY += 5;
@@ -170,8 +170,9 @@ public class PaletteBuilder {
     }
   }
 
-  protected function addAddLibraryButton():void {
+  protected function addLibraryButtons():void {
     addItem(new Button('Add Scrap Library', addScrapLibrary, false));
+    addItem(new Button('Export a Library', exportLibrary, false));
   }
 
   private function showDataCategory():void {
@@ -341,33 +342,26 @@ public class PaletteBuilder {
   private function addScrapLibrary():void {
     var targetObj:ScratchObj = app.viewedObj();
 
-    // Remove Scrap library, first.
-    var newScripts:Array = [];
-    for each (var script in targetObj.scripts) {
-      if (script.op === Specs.PROCEDURE_DEF && script.spec.indexOf(Specs.MAGIC_PROC_PREFIX) === 0) {
-        continue;
-      }
-      newScripts.push(script);
-    }
-    targetObj.scripts = newScripts;
+    app.importLibraryTo(targetObj, {
+      id: "scrap",
+      displayName: "Scrap",
+      scripts: [
+        [
+          ["procDef", "set broadcast %m.broadcast 's var %m.broadcastVar to %s", ["bc", "var", "value"], ["", "", ""], false],
+          ["setVar:to:",
+            ["concatenate:with:",
+              Specs.BROADCAST_VAR_PREFIX,
+              ["concatenate:with:",
+                ["getParam", "bc", "r"],
+                ["concatenate:with:",
+                  ">", ["getParam", "var", "r"]]]]]
+        ]
+      ]
+    });
+  }
 
-    targetObj.addJSONScripts([
-      [10, 10, [
-        ["procDef",
-         Specs.MAGIC_PROC_PREFIX + "set broadcast %m.broadcast 's var %m.broadcastVar to %s",
-         ["bc", "var", "value"], ["", "", ""], false],
-        ["setVar:to:",
-         ["concatenate:with:",
-          Specs.BROADCAST_VAR_PREFIX,
-          ["concatenate:with:",
-           ["getParam", "bc", "r"],
-           ["concatenate:with:",
-            ">", ["getParam", "var", "r"]]]],
-         ["getParam", "value", "r"]]
-      ]]
-    ]);
-
-    app.updatePalette()
+  private function exportLibrary():void {
+    // TODO
   }
 
   protected function addReporterCheckbox(block:Block):void {

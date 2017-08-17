@@ -1655,6 +1655,85 @@ package {
     }
 
     // -----------------------------
+    // Custom Block Libraries
+    //------------------------------
+
+    public function importLibraryTo(targetObj:ScratchObj, library:Object):void {
+      if (!('scripts' in library)) {
+        DialogBox.notify("Cannot Import", "No 'scripts' property in library object.");
+        return;
+      }
+
+      if (!('id' in library)) {
+        DialogBox.notify("Cannot Import", "No 'id' property in library object.");
+        return;
+      }
+
+      if (!('displayName' in library)) {
+        DialogBox.notify("Cannot Import", "No 'displayName' property in library object.");
+        return;
+      }
+
+      var prefix:String = getLibraryPrefixString(library);
+
+      // Remove the library, first.
+      // That just means we need to remove all custom blocks whose specs begin
+      // with the "magic prefix" (which is determined by the library's "id" and
+      // "displayName" properties).
+      var newScripts:Array = [];
+      for each (var script in targetObj.scripts) {
+        if (script.op === Specs.PROCEDURE_DEF && script.spec.indexOf(prefix) === 0) {
+          continue;
+        }
+        newScripts.push(script);
+      }
+      targetObj.scripts = newScripts;
+
+      // Compute the new scripts.
+      var libraryScripts:Array = library.scripts;
+      var scripts = libraryScripts.map(function(script:Array, i:Number, a:Array):Array {
+        var topBlock:Array = script[0];
+        if (topBlock[0] === Specs.PROCEDURE_DEF) {
+          topBlock[1] = prefix + topBlock[1];
+        }
+
+        // We need to pick a position for where the script is added..
+        // (10, 10) works "fine".
+        return [10, 10, script];
+      });
+
+      // Then just add the scripts.
+      targetObj.addJSONScripts(scripts);
+
+      updatePalette();
+    }
+
+    public function getLibraryPrefixString(library:Object):String {
+      return "$$" + library.id + "$" + library.displayName + ":";
+    }
+
+    public function parseLibraryPrefixString(str:String):Object {
+      // Reads a library-prefix string. Note that the given string can also
+      // include text past the prefix (so "$$foo$Foo Library:baaaz)" works just
+      // as well as "$$foo$Foo Library:" alone).
+
+      // In human terms: "$$" <library id> "$" <display name> ":" <rest>
+      var re:RegExp = /^\$\$([^$:]+)\$([^$:]+):(.*)$/;
+      var match = re.exec(str);
+
+      if (match == null) {
+        return null;
+      }
+
+      return {
+        libraryID: match[0],
+        displayName: match[1],
+        pastPrefix: match[2],
+        displayText: "(" + match[1] + ") " + match[2]
+      };
+    }
+
+    // -----------------------------
     // External Interface abstraction
     //------------------------------
 

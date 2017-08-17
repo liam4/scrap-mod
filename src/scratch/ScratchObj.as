@@ -374,7 +374,7 @@ package scratch {
       var result:Array = [];
       for each (var script:Block in scripts) {
         if (script.op === Specs.PROCEDURE_DEF) {
-          if (script.spec.indexOf(Specs.MAGIC_PROC_PREFIX) === 0) {
+          if (Scratch.app.parseLibraryPrefixString(script.spec) !== null) {
             continue;
           }
         }
@@ -387,7 +387,7 @@ package scratch {
       var result:Array = [];
       for each (var script:Block in scripts) {
         if (script.op === Specs.PROCEDURE_DEF) {
-          if (script.spec.indexOf(Specs.MAGIC_PROC_PREFIX) === 0) {
+          if (Scratch.app.parseLibraryPrefixString(script.spec) !== null) {
             result.push(script);
           }
         }
@@ -433,7 +433,7 @@ package scratch {
         var b:Block = scripts[i] as Block;
         if (
             b && (b.op == Specs.PROCEDURE_DEF) &&
-            b.spec.indexOf(Specs.MAGIC_PROC_PREFIX) !== 0
+            Scratch.app.parseLibraryPrefixString(b.spec) === null
            ) result.push(b);
       }
       return sortScriptsArray(result);
