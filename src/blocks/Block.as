@@ -888,7 +888,8 @@ package blocks {
     }
 
     public function showSpec():void {
-      DialogBox.notify('spec/op', 'Spec: ' + spec + '\nOp: ' + op);
+      var parts:String = ReadStream.tokenize(spec).join(",");
+      DialogBox.notify('spec/op', 'Spec: ' + spec + '\nOp: ' + op + '\nSpec Parts: ' + parts);
     }
 
     public function duplicateStack(deltaX:Number, deltaY:Number):void {
