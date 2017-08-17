@@ -383,18 +383,6 @@ package scratch {
       return result;
     }
 
-    public function libraryProcedureDefinitions():Array {
-      var result:Array = [];
-      for each (var script:Block in scripts) {
-        if (script.op === Specs.PROCEDURE_DEF) {
-          if (Scratch.app.parseLibraryPrefixString(script.spec) !== null) {
-            result.push(script);
-          }
-        }
-      }
-      return result;
-    }
-
     /* Sounds */
 
     public function findSound(arg:*):ScratchSound {
@@ -438,6 +426,19 @@ package scratch {
       }
       return sortScriptsArray(result);
     }
+
+    public function libraryProcedureDefinitions():Array {
+      var result:Array = [];
+      for each (var script:Block in scripts) {
+        if (script.op === Specs.PROCEDURE_DEF) {
+          if (Scratch.app.parseLibraryPrefixString(script.spec) !== null) {
+            result.push(script);
+          }
+        }
+      }
+      return sortScriptsArray(result);
+    }
+
 
     public function sortScriptsArray(arr:Array):Array {
       return arr.sort(function(a:Block, b:Block):int {
