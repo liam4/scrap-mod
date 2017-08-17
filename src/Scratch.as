@@ -1713,6 +1713,10 @@ package {
       // object, which is Not Good.. It's impossible to know who owns a block,
       // so we assume the selected sprite.
 
+      function success():void {
+        Scratch.app.log(LogLevel.INFO, 'library saved to file', {filename: file.name});
+      }
+
       var match:Object = parseLibraryPrefixString(block.spec);
 
       if (match === null) {
@@ -1722,16 +1726,18 @@ package {
 
       var library:Object = {
         id: match.libraryID,
-        displayName: match.displayName,
-        rest: match.pastPrefix,
-        match: match.match
+        displayName: match.displayName
       };
 
       var targetObj:ScratchObj = viewedObj();
 
       exportLibraryScriptsOf(targetObj, library);
 
-      DialogBox.notify("Library", util.JSON.stringify(library));
+      var jsonData = util.JSON.stringify(library);
+      var defaultName:String = library.id + ".json";
+      var file:FileReference = new FileReference();
+      file.addEventListener(Event.COMPLETE, success);
+      file.save(jsonData, defaultName);
     }
 
     public function exportLibraryScriptsOf(targetObj:ScratchObj, library:Object):void {
