@@ -44,6 +44,8 @@ import ui.parts.UIPart;
 
 import uiwidgets.*;
 
+import util.JSON;
+
 public class PaletteBuilder {
 
   protected var app:Scratch;
@@ -362,6 +364,18 @@ public class PaletteBuilder {
 
   private function exportLibrary():void {
     // TODO
+
+    var targetObj:ScratchObj = app.viewedObj();
+
+    var library:Object = {
+      id: "scrap",
+      displayName: "Scrap"
+    };
+
+    app.exportLibraryScriptsOf(targetObj, library);
+
+    DialogBox.notify("Script Count", library.scripts.length);
+    DialogBox.notify("Library String", util.JSON.stringify(library));
   }
 
   protected function addReporterCheckbox(block:Block):void {

@@ -1681,7 +1681,7 @@ package {
       // with the "magic prefix" (which is determined by the library's "id" and
       // "displayName" properties).
       var newScripts:Array = [];
-      for each (var script in targetObj.scripts) {
+      for each (var script:Block in targetObj.scripts) {
         if (script.op === Specs.PROCEDURE_DEF && script.spec.indexOf(prefix) === 0) {
           continue;
         }
@@ -1706,6 +1706,17 @@ package {
       targetObj.addJSONScripts(scripts);
 
       updatePalette();
+    }
+
+    public function exportLibraryScriptsOf(targetObj:ScratchObj, library:Object):void {
+      var prefix:String = getLibraryPrefixString(library);
+
+      library.scripts = [];
+      for each (var script:Block in targetObj.scripts) {
+        if (script.op === Specs.PROCEDURE_DEF && script.spec.indexOf(prefix) === 0) {
+          library.scripts.push(BlockIO.stackToArray(script));
+        }
+      }
     }
 
     public function getLibraryPrefixString(library:Object):String {
