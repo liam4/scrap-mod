@@ -383,7 +383,7 @@ package scratch {
       return result;
     }
 
-    public function magicProcedureDefinitions():Array {
+    public function libraryProcedureDefinitions():Array {
       var result:Array = [];
       for each (var script:Block in scripts) {
         if (script.op === Specs.PROCEDURE_DEF) {

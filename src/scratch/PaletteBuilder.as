@@ -144,11 +144,11 @@ public class PaletteBuilder {
     }
 
     addLibraryButtons();
-    var magicDefinitions:Array = app.viewedObj().magicProcedureDefinitions();
-    if (magicDefinitions.length > 0) {
+    var libraryDefinitions:Array = app.viewedObj().libraryProcedureDefinitions();
+    if (libraryDefinitions.length > 0) {
       nextY += 5;
-      for each (var proc:Block in magicDefinitions) {
-        b = new Block(proc.spec, ' ', Specs.extensionsColor, Specs.CALL, proc.defaultArgValues);
+      for each (var proc:Block in libraryDefinitions) {
+        b = new Block(proc.spec, ' ', Specs.procedureColor, Specs.CALL, proc.defaultArgValues);
         addItem(b);
       }
       nextY += 5;
