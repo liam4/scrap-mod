@@ -383,8 +383,10 @@ public class PaletteBuilder {
     var files:FileReferenceList = new FileReferenceList();
     files.addEventListener(Event.SELECT, fileSelected);
 
+    var filter:FileFilter = new FileFilter("Custom Block Libraries", "*.json");
+
     try {
-      files.browse();
+      files.browse([filter]);
     } catch (e:*) {}
   }
 
