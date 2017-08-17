@@ -23,8 +23,6 @@
 // A simple character stream with two character look-ahead and tokenization.
 
 package util {
-  import uiwidgets.DialogBox;
-
   public class ReadStream {
 
     private var src:String, i:int;
