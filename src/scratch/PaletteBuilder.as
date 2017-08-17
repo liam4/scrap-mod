@@ -44,6 +44,8 @@ import ui.parts.UIPart;
 
 import uiwidgets.*;
 
+import util.JSON;
+
 public class PaletteBuilder {
 
   protected var app:Scratch;
@@ -172,6 +174,7 @@ public class PaletteBuilder {
 
   protected function addLibraryButtons():void {
     addItem(new Button('Add Scrap Library', addScrapLibrary, false));
+    addItem(new Button('Import a Library', importLibraryFromDisk, false));
   }
 
   private function showDataCategory():void {
@@ -357,6 +360,32 @@ public class PaletteBuilder {
         ]
       ]
     });
+  }
+
+  private function importLibraryFromDisk():void {
+    function fileSelected(e:Event):void {
+      for each (var item in files.fileList) {
+        var file:FileReference = FileReference(item);
+        file.addEventListener(Event.COMPLETE, fileLoaded);
+        file.load();
+      }
+    }
+
+    function fileLoaded(e:Event):void {
+      var file:FileReference = FileReference(e.target);
+      var libraryJSON:String = file.data.readUTFBytes(file.data.length);
+      var library:Object = util.JSON.parse(libraryJSON);
+      app.importLibraryTo(targetObj, library);
+    }
+
+    var targetObj:ScratchObj = app.viewedObj();
+
+    var files:FileReferenceList = new FileReferenceList();
+    files.addEventListener(Event.SELECT, fileSelected);
+
+    try {
+      files.browse();
+    } catch (e:*) {}
   }
 
   protected function addReporterCheckbox(block:Block):void {
