@@ -1677,17 +1677,7 @@ package {
       var prefix:String = getLibraryPrefixString(library);
 
       // Remove the library, first.
-      // That just means we need to remove all custom blocks whose specs begin
-      // with the "magic prefix" (which is determined by the library's "id" and
-      // "displayName" properties).
-      var newScripts:Array = [];
-      for each (var script:Block in targetObj.scripts) {
-        if (script.op === Specs.PROCEDURE_DEF && script.spec.indexOf(prefix) === 0) {
-          continue;
-        }
-        newScripts.push(script);
-      }
-      targetObj.scripts = newScripts;
+      removeLibraryByPrefixString(targetObj, prefix);
 
       // Compute the new scripts.
       var libraryScripts:Array = library.scripts;
@@ -1707,6 +1697,22 @@ package {
 
       updatePalette();
     }
+
+    public function removeLibraryByPrefixString(targetObj:ScratchObj, prefix:String):void {
+      // Removes a block library.
+      // That just means we need to remove all custom blocks whose specs begin
+      // with the "magic prefix" (which is determined by the library's "id" and
+      // "displayName" properties).
+      var newScripts:Array = [];
+      for each (var script:Block in targetObj.scripts) {
+        if (script.op === Specs.PROCEDURE_DEF && script.spec.indexOf(prefix) === 0) {
+          continue;
+        }
+        newScripts.push(script);
+      }
+      targetObj.scripts = newScripts;
+    }
+
 
     public function exportLibraryOfBlock(block:Block):void {
       // This only knows to assume that the targetObj is the editor-selected
@@ -1754,6 +1760,21 @@ package {
           library.scripts.push(scriptArray);
         }
       }
+    }
+
+    public function removeLibraryOfBlock(block:Block):void {
+      var targetObj:ScratchObj = viewedObj();
+
+      var match:Object = parseLibraryPrefixString(block.spec);
+
+      if (match === null) {
+        DialogBox.notify("Cannot Remove Library", "This custom block is not part of a library.");
+        return;
+      }
+
+      removeLibraryByPrefixString(targetObj, match.prefix);
+
+      updatePalette();
     }
 
     public function getLibraryPrefixString(library:Object):String {

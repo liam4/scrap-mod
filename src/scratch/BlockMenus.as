@@ -569,6 +569,7 @@ package scratch {
       var match:Object = app.parseLibraryPrefixString(block.spec);
       if (match !== null) {
         m.addItem("export library " + match.displayName, exportLibrary);
+        m.addItem("remove library " + match.displayName, removeLibrary);
       }
 
       showMenu(m);
@@ -628,6 +629,10 @@ package scratch {
 
     private function exportLibrary():void {
       app.exportLibraryOfBlock(block);
+    }
+
+    private function removeLibrary():void {
+      app.removeLibraryOfBlock(block);
     }
 
     // ***** Variable and List menus *****
