@@ -44,8 +44,6 @@ import ui.parts.UIPart;
 
 import uiwidgets.*;
 
-import util.JSON;
-
 public class PaletteBuilder {
 
   protected var app:Scratch;
@@ -174,7 +172,6 @@ public class PaletteBuilder {
 
   protected function addLibraryButtons():void {
     addItem(new Button('Add Scrap Library', addScrapLibrary, false));
-    addItem(new Button('Export a Library', exportLibrary, false));
   }
 
   private function showDataCategory():void {
@@ -360,22 +357,6 @@ public class PaletteBuilder {
         ]
       ]
     });
-  }
-
-  private function exportLibrary():void {
-    // TODO
-
-    var targetObj:ScratchObj = app.viewedObj();
-
-    var library:Object = {
-      id: "scrap",
-      displayName: "Scrap"
-    };
-
-    app.exportLibraryScriptsOf(targetObj, library);
-
-    DialogBox.notify("Script Count", library.scripts.length);
-    DialogBox.notify("Library String", util.JSON.stringify(library));
   }
 
   protected function addReporterCheckbox(block:Block):void {

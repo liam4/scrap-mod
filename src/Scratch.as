@@ -1708,13 +1708,44 @@ package {
       updatePalette();
     }
 
+    public function exportLibraryOfBlock(block:Block):void {
+      // This only knows to assume that the targetObj is the editor-selected
+      // object, which is Not Good.. It's impossible to know who owns a block,
+      // so we assume the selected sprite.
+
+      var match:Object = parseLibraryPrefixString(block.spec);
+
+      if (match === null) {
+        DialogBox.notify("Cannot Export Library", "This custom block is not part of a library.");
+        return;
+      }
+
+      var library:Object = {
+        id: match.libraryID,
+        displayName: match.displayName,
+        rest: match.pastPrefix,
+        match: match.match
+      };
+
+      var targetObj:ScratchObj = viewedObj();
+
+      exportLibraryScriptsOf(targetObj, library);
+
+      DialogBox.notify("Library", util.JSON.stringify(library));
+    }
+
     public function exportLibraryScriptsOf(targetObj:ScratchObj, library:Object):void {
       var prefix:String = getLibraryPrefixString(library);
 
       library.scripts = [];
       for each (var script:Block in targetObj.scripts) {
         if (script.op === Specs.PROCEDURE_DEF && script.spec.indexOf(prefix) === 0) {
-          library.scripts.push(BlockIO.stackToArray(script));
+          // We don't want to store the actual prefix string on the procDef block.
+          // It's added on import automatically.
+          var scriptArray:Array = BlockIO.stackToArray(script);
+          var topBlock:Array = scriptArray[0];
+          topBlock[1] = parseLibraryPrefixString(topBlock[1]).rest;
+          library.scripts.push(scriptArray);
         }
       }
     }
@@ -1728,19 +1759,23 @@ package {
       // include text past the prefix (so "$$foo$Foo Library:baaaz)" works just
       // as well as "$$foo$Foo Library:" alone).
 
-      // In human terms: "$$" <library id> "$" <display name> ":" <rest>
-      var re:RegExp = /^\$\$([^$:]+)\$([^$:]+):(.*)$/;
+      // In human terms: "$$" <library id> "$" <display name> ":"
+      var re:RegExp = /^\$\$([^$]+)\$([^:]+):/;
       var match = re.exec(str);
 
       if (match == null) {
         return null;
       }
 
+      var prefix:String = match[0];
+      var rest:String = str.slice(prefix.length);
+
       return {
-        libraryID: match[0],
-        displayName: match[1],
-        pastPrefix: match[2],
-        displayText: "(" + match[1] + ") " + match[2]
+        libraryID: match[1],
+        displayName: match[2],
+        prefix: prefix,
+        rest: rest,
+        displayText: "(" + match[2] + ") " + rest
       };
     }
 

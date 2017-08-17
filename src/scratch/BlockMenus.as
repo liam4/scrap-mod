@@ -559,10 +559,18 @@ package scratch {
     private function procMenu(evt:MouseEvent):void {
       var m:Menu = new Menu(null, 'proc');
       addGenericBlockItems(m);
+
       m.addItem('edit', editProcSpec);
-      if (block.op==Specs.CALL) {
+
+      if (block.op == Specs.CALL) {
         m.addItem('define', jumpToProcDef);
       }
+
+      var match:Object = app.parseLibraryPrefixString(block.spec);
+      if (match !== null) {
+        m.addItem("export library " + match.displayName, exportLibrary);
+      }
+
       showMenu(m);
     }
 
@@ -616,6 +624,10 @@ package scratch {
       app.runtime.updateCalls();
       app.scriptsPane.fixCommentLayout();
       app.updatePalette();
+    }
+
+    private function exportLibrary():void {
+      app.exportLibraryOfBlock(block);
     }
 
     // ***** Variable and List menus *****
