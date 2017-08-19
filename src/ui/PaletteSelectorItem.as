@@ -60,7 +60,7 @@ public class PaletteSelectorItem extends Sprite {
 		var tabInset:int = 8;
 		var tabW:int = 7;
 		isSelected = flag;
-		var fmt:TextFormat = new TextFormat(CSS.font, 12, (isSelected ? CSS.white : CSS.offColor), isSelected);
+		var fmt:TextFormat = new TextFormat(CSS.font, 12, (isSelected ? CSS.white : CSS.offColor));
 		label.setTextFormat(fmt);
 		label.x = 17;
 		label.y = 1;
@@ -75,7 +75,7 @@ public class PaletteSelectorItem extends Sprite {
 	}
 
 	private function mouseOver(event:MouseEvent):void {
-		label.textColor = isSelected ? CSS.white : CSS.buttonLabelOverColor;
+		label.textColor = isSelected ? CSS.white : color;
 	}
 
 	private function mouseOut(event:MouseEvent):void {
